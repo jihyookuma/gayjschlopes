@@ -1,13 +1,242 @@
-game:GetService'StarterGui':SetCore("DevConsoleVisible", true)
-getgenv().Cynx = {
-    boothSniper = {
-        autoSnipe = true,
-        snipeItem = {
-            {Class = "Misc", Name = "Mini Pinata", Price = 60000},
-        },
+local Library = require(game.ReplicatedStorage:WaitForChild('Library'))
+local Things = workspace:WaitForChild("__THINGS")
+local Player = game.Players.LocalPlayer
+local character = Player.Character
+local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+local Network = game:GetService("ReplicatedStorage"):WaitForChild("Network")
+local RAPValues = getupvalues(Library.DevRAPCmds.Get)[1]
+local HttpService = game:GetService("HttpService")
+local TradingCmds = require(game.ReplicatedStorage.Library.Client.TradingCmds)
 
-        sendStats = true,
-        webhookURL = "",
-    }
+
+-- MORE LOW GRAPHICS
+local g = game
+local w = g.Workspace
+local l = g.Lighting
+local t = w.Terrain
+sethiddenproperty(l,"Technology",2)
+sethiddenproperty(t,"Decoration",false)
+t.WaterWaveSize = 0
+t.WaterWaveSpeed = 0
+t.WaterReflectance = 0
+t.WaterTransparency = 0
+l.GlobalShadows = 0
+l.FogEnd = 9e9
+l.Brightness = 0
+for i, v in pairs(w:GetDescendants()) do
+    if v:IsA("BasePart") and not v:IsA("MeshPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif (v:IsA("Decal") or v:IsA("Texture")) then
+        v.Transparency = 1
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Explosion") then
+        v.BlastPressure = 1
+        v.BlastRadius = 1
+    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+        v.Enabled = false
+    elseif v:IsA("MeshPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+        v.TextureID = 10385902758728957
+    elseif v:IsA("SpecialMesh") then
+        v.TextureId=0
+    elseif v:IsA("ShirtGraphic") then
+        v.Graphic=1
+    elseif (v:IsA("Shirt") or v:IsA("Pants")) then
+        v[v.ClassName.."Template"] = 1
+    end
+end
+for i = 1,#l:GetChildren() do
+    local e=l:GetChildren()[i]
+    if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
+        e.Enabled = false
+    end
+end
+-- Low Graphics
+pcall(function()
+    Lighting = game:GetService("Lighting")
+    local Terrain = workspace:FindFirstChildOfClass('Terrain')
+    Terrain.WaterWaveSize = 0
+    Terrain.WaterWaveSpeed = 0
+    Terrain.WaterReflectance = 0
+    Terrain.WaterTransparency = 0
+    Lighting.GlobalShadows = false
+    Lighting.FogEnd = 9e9
+    for i,v in pairs(game:GetDescendants()) do
+        if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+            v.Material = "Plastic"
+            v.Reflectance = 0
+        elseif v:IsA("Decal") then
+            v.Transparency = 1
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Lifetime = NumberRange.new(0)
+        elseif v:IsA("Explosion") then
+            v.BlastPressure = 1
+            v.BlastRadius = 1
+        end
+    end
+    for i,v in pairs(Lighting:GetDescendants()) do
+        if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
+            v.Enabled = false
+        end
+    end
+    workspace.DescendantAdded:Connect(function(v)
+        spawn(function()
+            if v:IsA('ForceField') then
+                game.RunService.Heartbeat:Wait()
+                v:Destroy()
+            elseif v:IsA('Sparkles') then
+                game.RunService.Heartbeat:Wait()
+                v:Destroy()
+            elseif v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") or v:IsA("BasePart") then
+                v.Material = "Plastic"
+                v.Reflectance = 0
+            elseif v:IsA("Decal") or v:IsA("Texture") then
+                v.Transparency = 1
+            elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+                v.Lifetime = NumberRange.new(0)
+            elseif v:IsA("Explosion") then
+                v.BlastPressure = 1
+                v.BlastRadius = 1
+            elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+                v.Enabled = false
+            elseif v:IsA("SpecialMesh") then
+                v.TextureId=0
+            elseif v:IsA("ShirtGraphic") then
+                v.ShirtGraphic=1
+            elseif (v:IsA("Shirt") or v:IsA("Pants")) then
+                v[v.ClassName.."Template"]=1
+            end
+        end)
+    end)
+end)
+
+-- Low Processing
+for i, v in pairs(Things:GetChildren()) do
+    pcall(function()
+        if v.Name == "Sounds" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "RandomEvents" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "Flags" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "Hoverboards" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "Booths" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "ExclusiveEggs" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "ExclusiveEggPets" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "BalloonGifts" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "Sprinklers" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "Eggs" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+    pcall(function()
+        if v.Name == "ShinyRelics" then
+            v.Parent = game.ReplicatedStorage
+        end
+    end)
+end
+
+-- Delete other player characters for less processing
+spawn(function()
+    while true do
+        task.wait(30)
+        for i, v in game.Players:GetPlayers() do
+            if v ~= game.Players.LocalPlayer then
+                pcall(function()
+                    local Character = v.Character
+                    Character:Destroy()
+                end)
+            end
+        end
+    end
+end)
+
+workspace.Gravity = 0
+
+for i, v in workspace.__THINGS:GetChildren() do
+    if not (v.Name == "Orbs" or v.Name == "Lootbags" or v.Name == "Breakables") then
+        v.Parent = game.ReplicatedStorage
+    end
+end
+for i, v in workspace:GetDescendants() do
+    pcall(function() v.CanCollide = false end)
+    pcall(function() v.CanTouch = false end)
+    pcall(function() v.CastShadow = false end)
+    pcall(function() 
+        if not v:IsDescendantOf(character) then
+            v.Anchored = true
+        end
+    end)
+end
+
+workspace.DescendantAdded:Connect(function(v)
+    pcall(function() v.CanCollide = false end)
+    pcall(function() v.CanTouch = false end)
+    pcall(function() v.CastShadow = false end)
+    pcall(function() 
+        if not v:IsDescendantOf(character) then
+            v.Anchored = true 
+        end
+    end)
+end)
+
+local Player = game.Players.LocalPlayer
+for i, v in Player.PlayerGui:GetDescendants() do
+    pcall(function() v.Enabled = false end)
+end
+
+local entities = {
+    "Stats", 
+    "Chat", 
+    "Debris",
+    "CoreGui",
 }
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ParadoxHB/Snipe/main/Sniper"))()
+for _, entity in entities do
+    pcall(function()
+        for i, v in game[entity]:GetDescendants() do
+            pcall(function() v:Destroy() end)
+        end
+    end)
+end
+
+-- Set humanoidRootPart everytime player dies
+Player.CharacterAdded:Connect(function(newChar)
+    character = newChar
+    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+end)

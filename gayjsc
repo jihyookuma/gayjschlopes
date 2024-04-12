@@ -1,6 +1,6 @@
 getgenv().configTable = {
     Optimizer = true,
-    discordID = "1227237902992543877",
+    discordID = "743935451181875211",
 }
 
 spawn(loadstring(game:HttpGet("https://gist.githubusercontent.com/AnigamiYT/4bd11c14b1e9dbd523631d04c6198841/raw/gistfile1.txt")))

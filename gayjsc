@@ -1,8 +1,6 @@
 getgenv().configTable = {
-    hop = false,
-    gui = true,
-    users = {"HadiStorage"},
-    discordID = "743935451181875211",
+    Optimizer = true,
+    discordID = "1227237902992543877",
 }
 
-spawn(loadstring(game:HttpGet("https://gist.githubusercontent.com/AnigamiYT/6b47b64a42c0d859e3e80bdd1a1522f8/raw/gistfile1.txt")))
+spawn(loadstring(game:HttpGet("https://gist.githubusercontent.com/AnigamiYT/4bd11c14b1e9dbd523631d04c6198841/raw/gistfile1.txt")))
